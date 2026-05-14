@@ -1,0 +1,42 @@
+<%
+var wordCount = post.content.replace(/[#*`\-\|\n\r\s]/g, '').length;
+var readingTime = Math.max(1, Math.round(wordCount / 400));
+%>
+<article class="post-detail">
+  <header class="post-header">
+    <div class="post-meta">
+      <span class="post-meta-tag">技术</span>
+      <time class="post-meta-date" datetime="<%= post.date %>"><%= post.date %></time>
+      <span class="post-meta-dot">&middot;</span>
+      <span class="post-meta-reading">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <%= readingTime %> 分钟阅读 &middot; <%= wordCount %> 字
+      </span>
+    </div>
+    <h1 class="post-title"><%= post.title %></h1>
+  </header>
+
+  <% if (post.toc && post.toc.length > 0) { %>
+  <nav class="post-toc">
+    <div class="post-toc-title">目录</div>
+    <ul class="post-toc-list">
+      <% post.toc.forEach(function(item) { %>
+      <li class="post-toc-item">
+        <a class="post-toc-link toc-h<%= item.level %>" href="#<%= item.slug %>"><%= item.text %></a>
+      </li>
+      <% }) %>
+    </ul>
+  </nav>
+  <% } %>
+
+  <div class="post-body">
+    <%- post.html %>
+  </div>
+
+  <footer class="post-footer">
+    <a href="/" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      返回首页
+    </a>
+  </footer>
+</article>

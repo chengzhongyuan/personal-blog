@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' && title !== '我的博客' ? title + ' | 我的博客' : '我的博客' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Reading Progress Bar -->
+  <div class="reading-progress" id="readingProgress"></div>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+        <span>My Blog</span>
+      </a>
+      <nav class="site-nav">
+        <a href="/" class="<%= typeof title !== 'undefined' && title === '我的博客' ? 'active' : '' %>">文章</a>
+        <a href="/about" class="<%= typeof title !== 'undefined' && title === '关于我' ? 'active' : '' %>">关于我</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <div class="container">
+      <%- body %>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Made with <span class="heart">&hearts;</span> &middot; Node.js & Express &middot; &copy; <%= new Date().getFullYear() %></p>
+    </div>
+  </footer>
+
+  <script>
+    // ===== Dark Mode =====
+    (function() {
+      var toggle = document.getElementById('themeToggle');
+      var stored = localStorage.getItem('theme');
+      if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+      toggle.addEventListener('click', function() {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      });
+    })();
+
+    // ===== Reading Progress Bar =====
+    (function() {
+      var bar = document.getElementById('readingProgress');
+      if (!bar) return;
+      window.addEventListener('scroll', function() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        bar.style.width = Math.min(progress, 100) + '%';
+      }, { passive: true });
+    })();
+
+    // ===== Back to Top Button =====
+    (function() {
+      var btn = document.getElementById('backToTop');
+      if (!btn) return;
+      window.addEventListener('scroll', function() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        if (scrollTop > 400) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      }, { passive: true });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+
+    // ===== Code Blocks: Language Label + Copy Button + Line Numbers =====
+    (function() {
+      var pres = document.querySelectorAll('.post-body pre');
+      pres.forEach(function(pre) {
+        var code = pre.querySelector('code');
+        if (!code) return;
+
+        // Extract language from hljs class
+        var lang = '';
+        var cls = code.className || '';
+        var match = cls.match(/language-(\S+)/);
+        if (match) {
+          lang = match[1];
+        }
+
+        // Create wrapper
+        var wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper';
+
+        // Header with language label and copy button
+        var header = document.createElement('div');
+        header.className = 'code-block-header';
+
+        var label = document.createElement('span');
+        label.className = 'code-lang-label';
+
+        var displayLang = lang || 'code';
+        // Clean up language display name
+        var langMap = {
+          'javascript': 'js', 'js': 'js',
+          'typescript': 'ts', 'ts': 'ts',
+          'bash': 'bash', 'sh': 'bash', 'shell': 'bash',
+          'python': 'python', 'py': 'python',
+          'cpp': 'cpp', 'c++': 'cpp', 'c': 'c',
+          'html': 'html', 'css': 'css',
+          'json': 'json', 'xml': 'xml',
+          'java': 'java', 'go': 'go', 'rust': 'rust',
+          'sql': 'sql', 'yaml': 'yaml', 'yml': 'yaml',
+          'markdown': 'md', 'md': 'md'
+        };
+        displayLang = langMap[lang] || lang;
+
+        var dot = document.createElement('span');
+        dot.className = 'code-lang-dot ' + (langMap[lang] || '');
+
+        label.appendChild(dot);
+        label.appendChild(document.createTextNode(displayLang));
+        header.appendChild(label);
+
+        var copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = '复制代码';
+        copyBtn.addEventListener('click', function() {
+          var text = code.textContent || code.innerText || '';
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function() {
+              copyBtn.textContent = '已复制!';
+              copyBtn.classList.add('copied');
+              setTimeout(function() {
+                copyBtn.textContent = '复制代码';
+                copyBtn.classList.remove('copied');
+              }, 2000);
+            });
+          } else {
+            // Fallback for older browsers
+            var textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+              document.execCommand('copy');
+              copyBtn.textContent = '已复制!';
+              copyBtn.classList.add('copied');
+              setTimeout(function() {
+                copyBtn.textContent = '复制代码';
+                copyBtn.classList.remove('copied');
+              }, 2000);
+            } catch (e) {
+              copyBtn.textContent = '复制失败';
+            }
+            document.body.removeChild(textarea);
+          }
+        });
+        header.appendChild(copyBtn);
+
+        // Add line numbers for multi-line code
+        var codeText = code.textContent || code.innerText || '';
+        var lines = codeText.split('\n');
+        if (lines.length > 6) {
+          pre.classList.add('has-line-numbers');
+          var wrapped = lines.map(function(line) {
+            return '<span class="line">' + escapeHtml(line) + '</span>';
+          }).join('\n');
+          code.innerHTML = wrapped;
+        }
+
+        // Wrap pre in wrapper
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(header);
+        wrapper.appendChild(pre);
+      });
+
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+    })();
+
+    // ===== Image Lightbox =====
+    (function() {
+      var overlay = document.createElement('div');
+      overlay.className = 'lightbox-overlay';
+      var img = document.createElement('img');
+      overlay.appendChild(img);
+
+      var caption = document.createElement('div');
+      caption.className = 'lightbox-caption';
+
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'lightbox-close';
+      closeBtn.innerHTML = '&times;';
+      closeBtn.setAttribute('aria-label', '关闭');
+
+      function close() {
+        overlay.classList.remove('active');
+        closeBtn.remove();
+        caption.remove();
+        document.body.style.overflow = '';
+      }
+
+      overlay.addEventListener('click', close);
+      closeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        close();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') close();
+      });
+
+      // Attach to all images inside post-body
+      var postImgs = document.querySelectorAll('.post-body img');
+      postImgs.forEach(function(postImg) {
+        postImg.addEventListener('click', function(e) {
+          e.stopPropagation();
+          img.src = postImg.src;
+          img.alt = postImg.alt;
+          caption.textContent = postImg.alt || '';
+          document.body.appendChild(overlay);
+          document.body.appendChild(closeBtn);
+          if (postImg.alt) document.body.appendChild(caption);
+          overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

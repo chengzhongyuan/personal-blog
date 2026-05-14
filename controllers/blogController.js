@@ -1,0 +1,148 @@
+const fs = require('fs');
+const path = require('path');
+const { marked } = require('marked');
+const { markedHighlight } = require('marked-highlight');
+const hljs = require('highlight.js');
+
+const POSTS_DIR = path.join(__dirname, '..', 'posts');
+
+// Markdown 渲染 + 代码语法高亮
+marked.use(markedHighlight({
+  langPrefix: 'hljs language-',
+  highlight(code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(code, { language: lang }).value;
+    }
+    return hljs.highlightAuto(code).value;
+  },
+}));
+
+// 解析 frontmatter：--- 包裹的 key: value 元数据
+function parseFrontmatter(raw) {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+  if (!match) return { meta: {}, content: raw };
+
+  const meta = {};
+  const yaml = match[1];
+  const lines = yaml.split(/\r?\n/);
+  for (const line of lines) {
+    const kv = line.match(/^(\w+):\s*(.+)$/);
+    if (kv) meta[kv[1]] = kv[2].trim();
+  }
+
+  return { meta, content: match[2] };
+}
+
+// 从 posts/ 目录加载所有文章
+function loadPosts() {
+  const files = fs.readdirSync(POSTS_DIR)
+    .filter(f => f.endsWith('.md'))
+    .sort(); // 按文件名排序
+
+  const posts = [];
+  for (const file of files) {
+    const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf-8');
+    const { meta, content } = parseFrontmatter(raw);
+
+    // ID 取自文件名开头的数字，新文章只需文件名以数字开头即可
+    const idMatch = file.match(/^(\d+)/);
+    const id = idMatch ? Number(idMatch[1]) : posts.length + 1;
+
+    posts.push({
+      id,
+      title: meta.title || file.replace(/^\d+-/, '').replace(/\.md$/, ''),
+      date: meta.date || '未注明日期',
+      content: content.trim(),
+    });
+  }
+
+  // 按日期倒序
+  posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return posts;
+}
+
+// 从 Markdown 提取标题生成 TOC
+function extractTOC(markdown) {
+  const headings = [];
+  const lines = markdown.split('\n');
+  const slugMap = {};
+
+  for (const line of lines) {
+    const match = line.match(/^(#{1,4})\s+(.+)$/);
+    if (!match) continue;
+    const level = match[1].length;
+    const text = match[2].trim();
+    let slug = text
+      .replace(/<[^>]*>/g, '')
+      .replace(/[^\w一-鿿\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .toLowerCase();
+
+    if (slugMap[slug] !== undefined) {
+      slugMap[slug]++;
+      slug = slug + '-' + slugMap[slug];
+    } else {
+      slugMap[slug] = 0;
+    }
+
+    headings.push({ level, text, slug });
+  }
+  return headings;
+}
+
+// 给渲染后的 HTML 中的标题添加 id 属性
+function addHeadingIds(html) {
+  const slugMap = {};
+  return html.replace(/<h([1-4])>(.+?)<\/h\1>/g, (match, level, content) => {
+    const text = content.replace(/<[^>]*>/g, '').trim();
+    let slug = text
+      .replace(/[^\w一-鿿\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .toLowerCase();
+
+    if (slugMap[slug] !== undefined) {
+      slugMap[slug]++;
+      slug = slug + '-' + slugMap[slug];
+    } else {
+      slugMap[slug] = 0;
+    }
+
+    const anchor = level === '2'
+      ? ` <a class="heading-anchor" href="#${slug}" title="链接到此标题">#</a>`
+      : '';
+
+    return `<h${level} id="${slug}">${content}${anchor}</h${level}>`;
+  });
+}
+
+// 博客首页 - 文章列表
+exports.getHome = (req, res) => {
+  const posts = loadPosts();
+  const list = posts.map(p => ({
+    id: p.id,
+    title: p.title,
+    date: p.date,
+    summary: p.content.split('\n')[0].replace(/^#+\s*/, '').slice(0, 120),
+  }));
+  res.render('index', { title: '我的博客', posts: list });
+};
+
+// 文章详情页
+exports.getPost = (req, res) => {
+  const posts = loadPosts();
+  const post = posts.find(p => p.id === Number(req.params.id));
+  if (!post) return res.status(404).render('404', { title: '文章未找到' });
+
+  const toc = extractTOC(post.content);
+  let html = marked.parse(post.content);
+  html = addHeadingIds(html);
+
+  res.render('post', { title: post.title, post: { ...post, html, toc } });
+};
+
+// 关于我页面
+exports.getAbout = (req, res) => {
+  res.render('about', { title: '关于我' });
+};
