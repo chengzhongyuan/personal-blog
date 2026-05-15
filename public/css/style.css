@@ -620,9 +620,12 @@ a:hover { color: var(--text-secondary); }
 .hljs-quote,
 .hljs-deletion { color: #52525b; font-style: italic; }
 
-.hljs-meta { color: #94a3b8; }
+.hljs-meta { color: #f9e2af; }
+.hljs-meta .hljs-keyword { color: #c084fc; }
+.hljs-meta .hljs-string { color: #6ee7b7; }
 
 .hljs-built_in { color: #f9e2af; }
+.hljs-literal { color: #fab387; }
 
 .hljs-title.class_,
 .hljs-class .hljs-title { color: #f9e2af; }
