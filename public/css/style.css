@@ -455,30 +455,73 @@ a:hover { color: var(--text-secondary); }
 }
 .post-body img:hover { opacity: .9; }
 
-/* ===== Code Block ===== */
+/* ===== Code Block — Glass + 3D ===== */
 .code-block-wrapper {
   position: relative;
-  margin: 28px 0;
-  border-radius: var(--radius);
+  margin: 32px 0;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--pre-bg);
+  background: #0d0d0e;
+  border: 1px solid transparent;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.2),
+    0 4px 8px rgba(0,0,0,.15),
+    0 8px 16px rgba(0,0,0,.1);
+  transition: box-shadow .3s ease;
+}
+.code-block-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    150deg,
+    rgba(100,100,120,.3) 0%,
+    rgba(80,80,100,.15) 30%,
+    rgba(60,60,80,.05) 60%,
+    rgba(90,90,110,.2) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.code-block-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 6px 10px auto 10px;
+  height: 30%;
+  z-index: 1;
+  border-radius: 60%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,.02) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  filter: blur(12px);
 }
 
 .code-block-header {
+  position: relative;
+  z-index: 2;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 14px;
-  background: rgba(255,255,255,.03);
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  padding: 10px 16px;
+  background: rgba(255,255,255,.015);
+  border-bottom: 1px solid rgba(255,255,255,.05);
 }
 .code-lang-label {
-  font-size: .72rem; font-weight: 500; color: #71717a;
-  letter-spacing: .03em; text-transform: uppercase;
+  font-size: .7rem; font-weight: 500; color: #666;
+  letter-spacing: .04em; text-transform: uppercase;
   display: flex; align-items: center; gap: 6px;
 }
 .code-lang-dot {
-  display: inline-block; width: 6px; height: 6px;
+  display: inline-block; width: 7px; height: 7px;
   border-radius: 50%;
+  box-shadow: 0 0 4px currentColor;
 }
 .code-lang-dot.js,  .code-lang-dot.javascript, .code-lang-dot.typescript { background: #f0db4f; }
 .code-lang-dot.bash, .code-lang-dot.shell,  .code-lang-dot.sh { background: #89e051; }
@@ -490,22 +533,25 @@ a:hover { color: var(--text-secondary); }
 .code-lang-dot { background: #6e7681; }
 
 .copy-btn {
-  display: inline-flex; align-items: center; gap: 3px;
+  display: inline-flex; align-items: center; gap: 4px;
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(255,255,255,.08);
-  color: #71717a;
-  padding: 3px 8px; border-radius: var(--radius-xs);
+  color: #666;
+  padding: 4px 10px; border-radius: var(--radius-xs);
   font-size: .7rem; font-weight: 500;
-  cursor: pointer; transition: all .15s ease;
+  cursor: pointer; transition: all .2s ease;
   font-family: inherit;
+  position: relative; z-index: 2;
 }
-.copy-btn:hover { background: rgba(255,255,255,.08); color: #a1a1aa; }
-.copy-btn.copied { color: #4ade80; border-color: rgba(74,222,128,.3); }
+.copy-btn:hover { background: rgba(255,255,255,.1); color: #999; border-color: rgba(255,255,255,.15); }
+.copy-btn.copied { color: #4ade80; border-color: rgba(74,222,128,.3); background: rgba(74,222,128,.08); }
 
 .post-body pre {
-  padding: 18px 20px;
+  position: relative;
+  z-index: 2;
+  padding: 20px 22px;
   overflow-x: auto;
-  font-size: .84rem; line-height: 1.7;
+  font-size: .84rem; line-height: 1.75;
   margin: 0;
   background: none;
   color: var(--pre-text);
@@ -530,27 +576,64 @@ a:hover { color: var(--text-secondary); }
   content: counter(line);
   position: absolute; left: 0; top: 0;
   width: 30px; text-align: right;
-  color: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.1);
   font-size: .8em; user-select: none; -webkit-user-select: none;
 }
 
-/* ===== Highlight.js Theme (minimal monochrome + subtle color) ===== */
-.hljs-keyword, .hljs-selector-tag, .hljs-type { color: #d4d4d8; }
-.hljs-string, .hljs-addition { color: #a3a3a3; }
-.hljs-number, .hljs-literal, .hljs-template-variable { color: #d4d4d8; }
-.hljs-comment, .hljs-quote, .hljs-deletion, .hljs-meta { color: #52525b; font-style: italic; }
-.hljs-built_in, .hljs-class .hljs-title, .hljs-title.class_ { color: #e4e4e7; }
-.hljs-function .hljs-title, .hljs-title.function_ { color: #fafafa; }
-.hljs-attr, .hljs-params, .hljs-attribute { color: #a3a3a3; }
-.hljs-variable, .hljs-variable.language_ { color: #d4d4d8; }
-.hljs-symbol, .hljs-regexp, .hljs-link, .hljs-bullet { color: #a3a3a3; }
-.hljs-title { color: #fafafa; }
-.hljs-section, .hljs-name, .hljs-selector-id, .hljs-selector-class { color: #e4e4e7; }
+/* ===== Highlight.js Theme — Vibrant ===== */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-type { color: #c084fc; }
+
+.hljs-string,
+.hljs-addition { color: #6ee7b7; }
+
+.hljs-number,
+.hljs-literal { color: #fab387; }
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion { color: #52525b; font-style: italic; }
+
+.hljs-meta { color: #94a3b8; }
+
+.hljs-built_in { color: #f9e2af; }
+
+.hljs-title.class_,
+.hljs-class .hljs-title { color: #f9e2af; }
+
+.hljs-title.function_,
+.hljs-function .hljs-title { color: #60a5fa; }
+
+.hljs-params,
+.hljs-attr,
+.hljs-attribute { color: #93c5fd; }
+
+.hljs-variable,
+.hljs-variable.language_,
+.hljs-template-variable { color: #f38ba8; }
+
+.hljs-symbol { color: #67e8f9; }
+.hljs-regexp { color: #f38ba8; }
+.hljs-link { color: #60a5fa; }
+.hljs-bullet { color: #c084fc; }
+
+.hljs-title { color: #60a5fa; }
+
+.hljs-section,
+.hljs-name { color: #f38ba8; }
+
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo { color: #c084fc; }
+
 .hljs-emphasis { font-style: italic; }
-.hljs-strong { font-weight: 600; }
-.hljs-tag { color: #d4d4d8; }
-.hljs-selector-attr, .hljs-selector-pseudo { color: #a3a3a3; }
-.hljs-property { color: #e4e4e7; }
+.hljs-strong { font-weight: 700; }
+
+.hljs-tag { color: #93c5fd; }
+
+.hljs-property { color: #89b4fa; }
 .hljs-punctuation { color: #71717a; }
 
 /* ===== TOC ===== */
