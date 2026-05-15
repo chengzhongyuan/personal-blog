@@ -605,64 +605,89 @@ a:hover { color: var(--text-secondary); }
   font-size: .8em; user-select: none; -webkit-user-select: none;
 }
 
-/* ===== Highlight.js Theme — Vibrant ===== */
+/* ===== Highlight.js Theme — VSCode Dark+ Inspired ===== */
+/* Keywords: class, public, private, if, else, return, constexpr... */
 .hljs-keyword,
-.hljs-selector-tag,
-.hljs-type { color: #c084fc; }
+.hljs-selector-tag { color: #569cd6; }
 
+/* Types: int, void, bool, auto, size_t... */
+.hljs-type { color: #569cd6; }
+
+/* Strings & headers: "hello", <iostream> */
 .hljs-string,
-.hljs-addition { color: #6ee7b7; }
+.hljs-addition { color: #ce9178; }
 
-.hljs-number,
-.hljs-literal { color: #fab387; }
+/* Numbers: 42, 3.14, 0xFF */
+.hljs-number { color: #b5cea8; }
 
+/* Literals: true, false, nullptr, NULL */
+.hljs-literal { color: #569cd6; }
+
+/* Comments */
 .hljs-comment,
 .hljs-quote,
-.hljs-deletion { color: #52525b; font-style: italic; }
+.hljs-deletion { color: #6a9955; font-style: italic; }
 
-.hljs-meta { color: #f9e2af; }
-.hljs-meta .hljs-keyword { color: #c084fc; }
-.hljs-meta .hljs-string { color: #6ee7b7; }
+/* Preprocessor: #include, #define, #ifndef, #endif */
+.hljs-meta { color: #9b9b9b; }
+.hljs-meta .hljs-keyword { color: #c586c0; }
+.hljs-meta .hljs-string { color: #ce9178; }
 
-.hljs-built_in { color: #f9e2af; }
-.hljs-literal { color: #fab387; }
-
+/* Class names: UdpClient */
 .hljs-title.class_,
-.hljs-class .hljs-title { color: #f9e2af; }
+.hljs-class .hljs-title,
+.hljs-title.class_ { color: #4ec9b0; }
 
+/* Functions: run(), main(), loadComments() */
 .hljs-title.function_,
-.hljs-function .hljs-title { color: #60a5fa; }
+.hljs-function .hljs-title { color: #dcdcaa; }
 
-.hljs-params,
-.hljs-attr,
-.hljs-attribute { color: #93c5fd; }
+/* Parameters: (int port, const string& ip) */
+.hljs-params { color: #9cdcfe; }
 
+/* Variables */
 .hljs-variable,
 .hljs-variable.language_,
-.hljs-template-variable { color: #f38ba8; }
+.hljs-template-variable { color: #9cdcfe; }
 
-.hljs-symbol { color: #67e8f9; }
-.hljs-regexp { color: #f38ba8; }
-.hljs-link { color: #60a5fa; }
-.hljs-bullet { color: #c084fc; }
+/* Built-ins: cout, cerr, std::move... */
+.hljs-built_in { color: #dcdcaa; }
 
-.hljs-title { color: #60a5fa; }
+/* Attributes / properties */
+.hljs-attr,
+.hljs-attribute { color: #9cdcfe; }
+
+/* Symbols */
+.hljs-symbol { color: #b5cea8; }
+
+/* Regex */
+.hljs-regexp { color: #d16969; }
+
+/* Links */
+.hljs-link { color: #569cd6; }
+
+/* Bullets in markdown lists */
+.hljs-bullet { color: #569cd6; }
+
+.hljs-title { color: #dcdcaa; }
 
 .hljs-section,
-.hljs-name { color: #f38ba8; }
+.hljs-name { color: #569cd6; }
 
 .hljs-selector-id,
 .hljs-selector-class,
 .hljs-selector-attr,
-.hljs-selector-pseudo { color: #c084fc; }
+.hljs-selector-pseudo { color: #d7ba7d; }
 
 .hljs-emphasis { font-style: italic; }
 .hljs-strong { font-weight: 700; }
 
-.hljs-tag { color: #93c5fd; }
+.hljs-tag { color: #569cd6; }
 
-.hljs-property { color: #89b4fa; }
-.hljs-punctuation { color: #71717a; }
+.hljs-property { color: #9cdcfe; }
+.hljs-punctuation { color: #d4d4d4; }
+
+.hljs-operator { color: #d4d4d4; }
 
 /* ===== TOC ===== */
 .post-toc {
