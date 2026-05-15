@@ -143,19 +143,16 @@ nohup node app.js > logs/app.log 2>&1 &
 # 本地写完 push 后，SSH 到服务器：
 ssh zhongyuan@49.232.244.54
 cd ~/my-blog
-git pull
-pkill -f "node app.js"
-nohup node app.js > logs/app.log 2>&1 &
+git pull && pm2 reload my-blog
 ```
 
-### PM2 管理（可选）
+### PM2 日常管理
 
 ```bash
-npm install -g pm2
-pm2 start ecosystem.config.js
-pm2 save && pm2 startup    # 设置开机自启
-pm2 reload my-blog          # 更新后重启
-pm2 logs my-blog            # 查看日志
+pm2 status              # 查看状态
+pm2 logs my-blog        # 查看日志
+pm2 reload my-blog      # 更新后重启
+pm2 stop my-blog        # 停止
 ```
 
 ## 防火墙
