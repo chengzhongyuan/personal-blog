@@ -6,7 +6,10 @@ const indexRoutes = require('./routes/index');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 静态资源
+// 静态资源 — CSS 禁用缓存
+app.use('/css', express.static(path.join(__dirname, 'public', 'css'), {
+  setHeaders: (res) => { res.set('Cache-Control', 'no-cache'); },
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 视图引擎
