@@ -1,13 +1,21 @@
 <div class="page-hero">
   <h1>文章</h1>
-  <p><%= posts.length %> 篇文章</p>
+  <p><%= groups.reduce((s, g) => s + g.posts.length, 0) %> 篇文章</p>
 </div>
 
-<% if (posts.length === 0) { %>
+<% if (groups.length === 0) { %>
   <p class="empty-hint">还没有文章。</p>
 <% } else { %>
-  <div class="post-list">
-    <% posts.forEach(function(post) { %>
+  <% groups.forEach(function(group) { %>
+    <% if (group.name) { %>
+    <div class="category-section">
+      <h2 class="category-title"><%= group.name %></h2>
+      <div class="post-list">
+    <% } else { %>
+      <div class="post-list" style="margin-top: 24px;">
+    <% } %>
+
+    <% group.posts.forEach(function(post) { %>
       <article class="post-card" onclick="location.href='/post/<%= post.id %>'">
         <div class="post-card-header">
           <h2 class="post-card-title">
@@ -16,13 +24,14 @@
           <time class="post-card-date" datetime="<%= post.date %>"><%= post.date %></time>
         </div>
         <p class="post-card-summary"><%= post.summary %></p>
-        <div class="post-card-footer">
-          <span class="read-more">
-            阅读
-            <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </span>
-        </div>
       </article>
     <% }) %>
-  </div>
+
+    <% if (group.name) { %>
+      </div>
+    </div>
+    <% } else { %>
+      </div>
+    <% } %>
+  <% }) %>
 <% } %>

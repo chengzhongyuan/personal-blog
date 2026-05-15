@@ -52,6 +52,7 @@ function loadPosts() {
       id,
       title: meta.title || file.replace(/^\d+-/, '').replace(/\.md$/, ''),
       date: meta.date || '未注明日期',
+      category: meta.category || '',
       content: content.trim(),
     });
   }
@@ -124,9 +125,29 @@ exports.getHome = (req, res) => {
     id: p.id,
     title: p.title,
     date: p.date,
+    category: p.category,
     summary: p.content.split('\n')[0].replace(/^#+\s*/, '').slice(0, 120),
   }));
-  res.render('index', { title: '我的博客', posts: list });
+
+  // 按分类分组，保持分类顺序
+  const categoryOrder = ['自我心得', 'C++', 'Linux'];
+  const groups = [];
+  const seenCategories = new Set();
+
+  for (const cat of categoryOrder) {
+    const items = list.filter(p => p.category === cat);
+    if (items.length > 0) {
+      groups.push({ name: cat, posts: items });
+      seenCategories.add(cat);
+    }
+  }
+  // 其余未分类或不在预设分类中的
+  const rest = list.filter(p => !seenCategories.has(p.category));
+  if (rest.length > 0) {
+    groups.push({ name: '', posts: rest });
+  }
+
+  res.render('index', { title: '我的博客', groups });
 };
 
 // 文章详情页

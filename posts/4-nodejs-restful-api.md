@@ -1,6 +1,7 @@
 ---
 title: 从零搭建 Node.js RESTful API
 date: 2025-11-15
+category: 自我心得
 ---
 
 Express 是 Node.js 最流行的 Web 框架，用它搭建一个 RESTful API 只需要几分钟。

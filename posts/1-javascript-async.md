@@ -1,6 +1,7 @@
 ---
 title: JavaScript 异步编程：从回调到 async/await
 date: 2025-12-20
+category: 自我心得
 ---
 
 JavaScript 的异步编程经历了多次演变，从最早的回调函数到现在的 async/await，每一步都让代码更易读、更好维护。
