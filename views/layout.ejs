@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof title !== 'undefined' && title !== '我的博客' ? title + ' | 我的博客' : '我的博客' %></title>
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
 <body>
   <!-- Reading Progress Bar -->
@@ -234,6 +235,30 @@
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') close();
       });
+
+      // ===== Mermaid Diagram Rendering =====
+      (function() {
+        var mermaidBlocks = document.querySelectorAll('pre code.language-mermaid, pre code[class*="language-mermaid"]');
+        if (!mermaidBlocks.length) return;
+        mermaid.initialize({ startOnLoad: false, theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default' });
+        var id = 0;
+        mermaidBlocks.forEach(function(code) {
+          var pre = code.parentElement;
+          var wrapper = pre.parentElement;
+          var text = code.textContent || code.innerText || '';
+          var div = document.createElement('div');
+          div.className = 'mermaid-diagram';
+          div.textContent = text;
+          div.setAttribute('data-mermaid-id', ++id);
+          // Replace the code block wrapper (or pre)
+          if (wrapper && wrapper.classList.contains('code-block-wrapper')) {
+            wrapper.parentNode.replaceChild(div, wrapper);
+          } else {
+            pre.parentNode.replaceChild(div, pre);
+          }
+        });
+        mermaid.run({ querySelector: '.mermaid-diagram' });
+      })();
 
       // Attach to all images inside post-body
       var postImgs = document.querySelectorAll('.post-body img');

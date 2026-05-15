@@ -455,6 +455,21 @@ a:hover { color: var(--text-secondary); }
   word-break: break-word; font-family: var(--font-mono);
 }
 
+/* Mermaid Diagrams */
+.mermaid-diagram {
+  margin: 28px 0;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  text-align: center;
+}
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Images */
 .post-body img {
   max-width: 100%; height: auto;

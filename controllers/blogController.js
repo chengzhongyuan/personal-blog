@@ -10,6 +10,8 @@ const POSTS_DIR = path.join(__dirname, '..', 'posts');
 marked.use(markedHighlight({
   langPrefix: 'hljs language-',
   highlight(code, lang) {
+    // mermaid 图表不交给 highlight.js 处理
+    if (lang === 'mermaid') return code;
     if (lang && hljs.getLanguage(lang)) {
       return hljs.highlight(code, { language: lang }).value;
     }
