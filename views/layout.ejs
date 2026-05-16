@@ -181,28 +181,32 @@
         });
         header.appendChild(copyBtn);
 
-        // Add line numbers for multi-line code
+        // Add line numbers for multi-line code without touching highlighted markup
         var codeText = code.textContent || code.innerText || '';
         var lines = codeText.split('\n');
+        var lineNumbers = null;
         if (lines.length > 6) {
-          pre.classList.add('has-line-numbers');
-          var wrapped = lines.map(function(line) {
-            return '<span class="line">' + escapeHtml(line) + '</span>';
-          }).join('\n');
-          code.innerHTML = wrapped;
+          wrapper.classList.add('has-line-numbers');
+          lineNumbers = document.createElement('div');
+          lineNumbers.className = 'code-line-numbers';
+          lineNumbers.setAttribute('aria-hidden', 'true');
+          lines.forEach(function(_, index) {
+            var number = document.createElement('span');
+            number.className = 'code-line-number';
+            number.textContent = index + 1;
+            lineNumbers.appendChild(number);
+          });
         }
 
         // Wrap pre in wrapper
+        var content = document.createElement('div');
+        content.className = 'code-block-content';
         pre.parentNode.insertBefore(wrapper, pre);
         wrapper.appendChild(header);
-        wrapper.appendChild(pre);
+        wrapper.appendChild(content);
+        if (lineNumbers) content.appendChild(lineNumbers);
+        content.appendChild(pre);
       });
-
-      function escapeHtml(str) {
-        var div = document.createElement('div');
-        div.appendChild(document.createTextNode(str));
-        return div.innerHTML;
-      }
     })();
 
     // ===== Image Lightbox =====
