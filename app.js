@@ -5,6 +5,7 @@ const indexRoutes = require('./routes/index');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 // 静态资源 — CSS 禁用缓存
 app.use('/css', express.static(path.join(__dirname, 'public', 'css'), {
@@ -32,6 +33,6 @@ app.use((err, req, res, next) => {
   res.status(500).render('500', { title: '服务器错误' });
 });
 
-app.listen(PORT, () => {
-  console.log(`博客服务已启动: http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`博客服务已启动: http://${HOST}:${PORT}`);
 });

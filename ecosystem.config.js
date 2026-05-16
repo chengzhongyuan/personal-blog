@@ -7,6 +7,7 @@ module.exports = {
     env: {
       NODE_ENV: 'production',
       PORT: 3000,
+      HOST: '0.0.0.0',
     },
     // 日志
     log_date_format: 'YYYY-MM-DD HH:mm:ss',

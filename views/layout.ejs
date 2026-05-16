@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof title !== 'undefined' && title !== '我的博客' ? title + ' | 我的博客' : '我的博客' %></title>
-  <link rel="stylesheet" href="/css/style.css?v=4">
+  <link rel="stylesheet" href="/css/style.css?v=6">
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
 <body>
@@ -190,12 +190,9 @@
           lineNumbers = document.createElement('div');
           lineNumbers.className = 'code-line-numbers';
           lineNumbers.setAttribute('aria-hidden', 'true');
-          lines.forEach(function(_, index) {
-            var number = document.createElement('span');
-            number.className = 'code-line-number';
-            number.textContent = index + 1;
-            lineNumbers.appendChild(number);
-          });
+          lineNumbers.textContent = lines.map(function(_, index) {
+            return index + 1;
+          }).join('\n');
         }
 
         // Wrap pre in wrapper
@@ -248,7 +245,7 @@
         var id = 0;
         mermaidBlocks.forEach(function(code) {
           var pre = code.parentElement;
-          var wrapper = pre.parentElement;
+          var wrapper = pre.closest ? pre.closest('.code-block-wrapper') : pre.parentElement;
           var text = code.textContent || code.innerText || '';
           var div = document.createElement('div');
           div.className = 'mermaid-diagram';

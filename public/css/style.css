@@ -571,9 +571,34 @@ a:hover { color: var(--text-secondary); }
 .copy-btn:hover { background: rgba(255,255,255,.1); color: #999; border-color: rgba(255,255,255,.15); }
 .copy-btn.copied { color: #4ade80; border-color: rgba(74,222,128,.3); background: rgba(74,222,128,.08); }
 
+.code-block-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.code-line-numbers {
+  flex: 0 0 48px;
+  padding: 20px 10px 20px 0;
+  border-right: 1px solid rgba(255,255,255,.04);
+  background: rgba(255,255,255,.012);
+  color: rgba(255,255,255,.16);
+  font-family: var(--font-mono);
+  font-size: .84rem;
+  line-height: 1.75;
+  text-align: right;
+  white-space: pre;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 .post-body pre {
   position: relative;
   z-index: 2;
+  flex: 1;
+  min-width: 0;
   padding: 20px 22px;
   overflow-x: auto;
   font-size: .84rem; line-height: 1.75;
@@ -588,21 +613,6 @@ a:hover { color: var(--text-secondary); }
   background: none; color: inherit; padding: 0; border-radius: 0;
   font-size: inherit; font-weight: 400;
   font-family: var(--font-mono);
-}
-
-/* Line numbers */
-.post-body pre.has-line-numbers { counter-reset: line; }
-.post-body pre.has-line-numbers code { display: block; }
-.post-body pre.has-line-numbers .line {
-  display: block; counter-increment: line;
-  padding-left: 40px; position: relative;
-}
-.post-body pre.has-line-numbers .line::before {
-  content: counter(line);
-  position: absolute; left: 0; top: 0;
-  width: 30px; text-align: right;
-  color: rgba(255,255,255,.1);
-  font-size: .8em; user-select: none; -webkit-user-select: none;
 }
 
 /* ===== Highlight.js Theme — VSCode Dark+ Inspired ===== */
@@ -865,6 +875,11 @@ a:hover { color: var(--text-secondary); }
   .post-title { font-size: 1.5rem; }
   .post-body { font-size: .9rem; }
   .post-body pre { padding: 14px 16px; font-size: .78rem; }
+  .code-line-numbers {
+    flex-basis: 40px;
+    padding: 14px 8px 14px 0;
+    font-size: .78rem;
+  }
   .post-body table { font-size: .78rem; }
   .post-body th, .post-body td { padding: 8px 10px; }
   .code-block-header { padding: 6px 10px; }
