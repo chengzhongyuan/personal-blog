@@ -132,7 +132,7 @@ exports.getHome = (req, res) => {
   }));
 
   // 按分类分组，保持分类顺序
-  const categoryOrder = ['自我心得', 'C++', 'Linux'];
+  const categoryOrder = ['自我心得', 'C++', 'Linux', '面试经典150题'];
   const groups = [];
   const seenCategories = new Set();
 
