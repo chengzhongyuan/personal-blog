@@ -3,7 +3,7 @@ title: 1、合并两个有序数组
 date: 2026-5-17
 category: 面试经典150题
 ---
-
+# 难度：简单
 # 一、题目以及思路
 ![unique_ptr](/images/leetcode/1.png)
 
