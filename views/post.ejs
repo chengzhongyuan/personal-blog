@@ -12,16 +12,34 @@ var readingTime = Math.max(1, Math.round(wordCount / 400));
     <h1 class="post-title"><%= post.title %></h1>
   </header>
 
-  <% if (post.toc && post.toc.length > 0) { %>
+  <% if (post.tocTree && post.tocTree.length > 0) { %>
   <nav class="post-toc">
     <div class="post-toc-title">目录</div>
-    <ul class="post-toc-list">
-      <% post.toc.forEach(function(item) { %>
-      <li class="post-toc-item">
-        <a class="post-toc-link toc-h<%= item.level %>" href="#<%= item.slug %>"><%= item.text %></a>
-      </li>
-      <% }) %>
-    </ul>
+    <%
+    function renderTOC(items) {
+      if (!items || items.length === 0) return '';
+      var html = '<ul class="post-toc-list">';
+      items.forEach(function(item) {
+        var hasChildren = item.children && item.children.length > 0;
+        html += '<li class="post-toc-item toc-level-' + item.level + '">';
+        html += '<div class="post-toc-row">';
+        if (hasChildren) {
+          html += '<button class="toc-toggle" aria-label="展开/折叠">';
+          html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>';
+          html += '</button>';
+        }
+        html += '<a class="post-toc-link" href="#' + item.slug + '">' + item.text + '</a>';
+        html += '</div>';
+        if (hasChildren) {
+          html += renderTOC(item.children);
+        }
+        html += '</li>';
+      });
+      html += '</ul>';
+      return html;
+    }
+    %>
+    <%- renderTOC(post.tocTree) %>
   </nav>
   <% } %>
 
@@ -163,5 +181,19 @@ var readingTime = Math.max(1, Math.round(wordCount / 400));
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
   }
+})();
+</script>
+
+<script>
+// ===== TOC Collapse/Expand =====
+(function() {
+  var toggles = document.querySelectorAll('.toc-toggle');
+  toggles.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var li = btn.closest('.post-toc-item');
+      var isCollapsed = li.classList.toggle('collapsed');
+      btn.classList.toggle('collapsed', isCollapsed);
+    });
+  });
 })();
 </script>

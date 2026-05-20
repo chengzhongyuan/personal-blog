@@ -95,6 +95,24 @@ function extractTOC(markdown) {
   return headings;
 }
 
+// 将扁平标题列表转为树形结构，用于折叠目录
+function buildTOCTree(headings) {
+  const root = { children: [] };
+  const stack = [{ level: 0, node: root }];
+
+  for (const h of headings) {
+    const node = { ...h, children: [] };
+    // 上浮直到找到父级（level 更小的节点）
+    while (stack.length > 0 && stack[stack.length - 1].level >= h.level) {
+      stack.pop();
+    }
+    stack[stack.length - 1].node.children.push(node);
+    stack.push({ level: h.level, node });
+  }
+
+  return root.children;
+}
+
 // 给渲染后的 HTML 中的标题添加 id 属性
 function addHeadingIds(html) {
   const slugMap = {};
@@ -143,6 +161,8 @@ exports.getHome = (req, res) => {
 
   for (const cat of categoryOrder) {
     const items = list.filter(p => p.category === cat);
+    // 面试经典150题按编号正序（1→2→3），其他分类保持日期倒序
+    if (cat === '面试经典150题') items.reverse();
     if (items.length > 0) {
       groups.push({ name: cat, posts: items });
       seenCategories.add(cat);
@@ -163,7 +183,8 @@ exports.getPost = (req, res) => {
   const post = posts.find(p => p.id === Number(req.params.id));
   if (!post) return res.status(404).render('404', { title: '文章未找到' });
 
-  const toc = extractTOC(post.content);
+  const headings = extractTOC(post.content);
+  const tocTree = buildTOCTree(headings);
   let html = marked.parse(post.content);
   html = addHeadingIds(html);
 
@@ -175,7 +196,7 @@ exports.getPost = (req, res) => {
 
   res.render('post', {
     title: post.title,
-    post: { ...post, html, toc },
+    post: { ...post, html, tocTree },
     likeCount: postLikes.count,
     comments: postComments,
   });

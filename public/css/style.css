@@ -714,16 +714,51 @@ a:hover { color: var(--text-secondary); }
   display: block;
 }
 .post-toc-title::before { display: none; }
-.post-toc-list { list-style: none; padding: 0; }
-.post-toc-item { margin-bottom: 1px; }
+.post-toc-list { list-style: none; padding: 0; margin: 0; }
+.post-toc-item { margin-bottom: 0; }
+
+.post-toc-row {
+  display: flex; align-items: center; gap: 4px;
+}
+
+.toc-toggle {
+  display: flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px;
+  padding: 0; border: none; background: none;
+  color: var(--text-tertiary); cursor: pointer;
+  flex-shrink: 0;
+  border-radius: 3px;
+  transition: transform .2s ease, color .15s ease;
+}
+.toc-toggle:hover { color: var(--text); }
+.toc-toggle.collapsed { transform: rotate(0deg); }
+.toc-toggle:not(.collapsed) { transform: rotate(90deg); }
+
 .post-toc-link {
   display: block; padding: 4px 0; border-radius: 0;
   font-size: .84rem; color: var(--text-tertiary);
   transition: color .15s ease;
 }
 .post-toc-link:hover { color: var(--text); background: none; }
-.post-toc-link.toc-h3 { padding-left: 14px; font-size: .82rem; }
-.post-toc-link.toc-h4 { padding-left: 28px; font-size: .8rem; }
+
+/* Level indentation */
+.post-toc-item.toc-level-1 > .post-toc-row .post-toc-link { font-weight: 600; font-size: .85rem; color: var(--text-secondary); }
+.post-toc-item.toc-level-2 > .post-toc-row { padding-left: 16px; }
+.post-toc-item.toc-level-2 > .post-toc-row .post-toc-link { font-size: .82rem; }
+.post-toc-item.toc-level-3 > .post-toc-row { padding-left: 30px; }
+.post-toc-item.toc-level-3 > .post-toc-row .post-toc-link { font-size: .8rem; }
+.post-toc-item.toc-level-4 > .post-toc-row { padding-left: 44px; }
+.post-toc-item.toc-level-4 > .post-toc-row .post-toc-link { font-size: .78rem; }
+
+/* Collapse animation */
+.post-toc-item > .post-toc-list {
+  overflow: hidden;
+  max-height: 2000px;
+  transition: max-height .3s ease;
+}
+.post-toc-item.collapsed > .post-toc-list {
+  max-height: 0;
+}
 
 /* ===== Post Footer ===== */
 .post-footer {
