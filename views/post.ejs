@@ -23,11 +23,9 @@ var readingTime = Math.max(1, Math.round(wordCount / 400));
         var hasChildren = item.children && item.children.length > 0;
         html += '<li class="post-toc-item toc-level-' + item.level + '">';
         html += '<div class="post-toc-row">';
-        if (hasChildren) {
-          html += '<button class="toc-toggle" aria-label="展开/折叠">';
-          html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>';
-          html += '</button>';
-        }
+        html += '<span class="toc-toggle' + (hasChildren ? '' : ' toc-toggle-placeholder') + '">';
+        html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>';
+        html += '</span>';
         html += '<a class="post-toc-link" href="#' + item.slug + '">' + item.text + '</a>';
         html += '</div>';
         if (hasChildren) {
@@ -187,8 +185,9 @@ var readingTime = Math.max(1, Math.round(wordCount / 400));
 <script>
 // ===== TOC Collapse/Expand =====
 (function() {
-  var toggles = document.querySelectorAll('.toc-toggle');
+  var toggles = document.querySelectorAll('.toc-toggle:not(.toc-toggle-placeholder)');
   toggles.forEach(function(btn) {
+    // Default expanded — add .collapsed on click to collapse
     btn.addEventListener('click', function() {
       var li = btn.closest('.post-toc-item');
       var isCollapsed = li.classList.toggle('collapsed');
