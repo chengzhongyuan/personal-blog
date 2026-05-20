@@ -3,6 +3,7 @@ const path = require('path');
 const { marked } = require('marked');
 const { markedHighlight } = require('marked-highlight');
 const hljs = require('highlight.js');
+const store = require('../utils/store');
 
 const POSTS_DIR = path.join(__dirname, '..', 'posts');
 
@@ -123,12 +124,16 @@ function addHeadingIds(html) {
 // 博客首页 - 文章列表
 exports.getHome = (req, res) => {
   const posts = loadPosts();
+  const likes = store.readJSON('likes.json');
+  const comments = store.readJSON('comments.json');
   const list = posts.map(p => ({
     id: p.id,
     title: p.title,
     date: p.date,
     category: p.category,
     summary: p.content.split('\n')[0].replace(/^#+\s*/, '').slice(0, 120),
+    likeCount: (likes[String(p.id)] && likes[String(p.id)].count) || 0,
+    commentCount: (comments[String(p.id)] && comments[String(p.id)].length) || 0,
   }));
 
   // 按分类分组，保持分类顺序
@@ -162,7 +167,18 @@ exports.getPost = (req, res) => {
   let html = marked.parse(post.content);
   html = addHeadingIds(html);
 
-  res.render('post', { title: post.title, post: { ...post, html, toc } });
+  // 加载互动数据
+  const likes = store.readJSON('likes.json');
+  const comments = store.readJSON('comments.json');
+  const postLikes = likes[String(post.id)] || { count: 0, ips: [] };
+  const postComments = comments[String(post.id)] || [];
+
+  res.render('post', {
+    title: post.title,
+    post: { ...post, html, toc },
+    likeCount: postLikes.count,
+    comments: postComments,
+  });
 };
 
 // 关于我页面

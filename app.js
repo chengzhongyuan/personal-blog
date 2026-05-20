@@ -7,6 +7,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
+// Body 解析 — JSON & URL-encoded
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
 // 静态资源 — CSS 禁用缓存
 app.use('/css', express.static(path.join(__dirname, 'public', 'css'), {
   setHeaders: (res) => { res.set('Cache-Control', 'no-cache'); },
