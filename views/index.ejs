@@ -3,6 +3,8 @@
   <p><%= groups.reduce((s, g) => s + g.posts.length, 0) %> 篇文章</p>
 </div>
 
+<a class="secret-hotspot" href="/secret" aria-label="打开隐藏区域" title="隐藏区域"></a>
+
 <% if (groups.length === 0) { %>
   <p class="empty-hint">还没有文章。</p>
 <% } else { %>
