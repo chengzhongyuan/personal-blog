@@ -1,3 +1,13 @@
+/*
+  interactionController.js — 互动功能
+
+  处理点赞和评论的 API（纯 JSON 接口，不渲染页面）：
+  - 点赞切换（toggleLike）：基于 IP 去重，同一 IP
+  再次请求取消点赞，数据持久化到 likes.json
+  - 评论发表（addComment）：支持匿名评论，作者名和内容有长度限制，生成唯一 ID
+  和时间戳
+  - 互动数据查询（getInteractions）：返回某篇文章的点赞状态、点赞数、评论列表
+*/
 const crypto = require('crypto');
 const store = require('../utils/store');
 

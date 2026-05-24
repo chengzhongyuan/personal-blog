@@ -1,3 +1,15 @@
+/*
+  blogController.js — 博客主体
+
+  处理公开博客的核心逻辑：
+  - 文章加载：从 posts/ 目录读取 Markdown 文件，解析
+  frontmatter（标题、日期、分类），按日期倒序排列
+  - 首页渲染（getHome）：展示文章列表，按分类分组（自我心得、C++、Linux、面试
+  经典150题），附带动画的点赞数和评论数
+  - 文章详情页（getPost）：将 Markdown 渲染为 HTML（带语法高亮），生成树形 TOC
+   目录，注入标题锚点 id
+  - 关于页面（getAbout）：渲染关于我页面
+*/
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');

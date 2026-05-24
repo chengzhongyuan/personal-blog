@@ -1,3 +1,14 @@
+/*
+  secretController.js — 隐藏区域
+
+  实现带密码保护的私密博客区：
+  - 访问控制：通过 Cookie 验证密码（默认 050129），未解锁时展示密码输入框
+  - 密码验证（unlockSecretHome）：验证通过后设置 httpOnly Cookie，60s
+  内多次错误会触发冷却
+  - 文章展示：从 secret-posts/ 目录加载文章，渲染逻辑与公开博客一致（Markdown
+  → HTML + TOC + 锚点）
+  - 退出登录（logoutSecretHome）：清除 Cookie 并重定向回密码页
+*/
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
