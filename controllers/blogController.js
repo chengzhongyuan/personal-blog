@@ -59,9 +59,7 @@ function loadPosts() {
     const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf-8');
     const { meta, content } = parseFrontmatter(raw);
 
-    // ID 取自文件名开头的数字，新文章只需文件名以数字开头即可
-    const idMatch = file.match(/^(\d+)/);
-    const id = idMatch ? Number(idMatch[1]) : posts.length + 1;
+    const id = file.replace(/\.md$/, '');
 
     posts.push({
       id,
@@ -192,7 +190,7 @@ exports.getHome = (req, res) => {
 // 文章详情页
 exports.getPost = (req, res) => {
   const posts = loadPosts();
-  const post = posts.find(p => p.id === Number(req.params.id));
+  const post = posts.find(p => String(p.id) === String(req.params.id));
   if (!post) return res.status(404).render('404', { title: '文章未找到' });
 
   const headings = extractTOC(post.content);
