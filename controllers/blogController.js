@@ -12,7 +12,7 @@
 */
 const fs = require('fs');
 const path = require('path');
-const { marked } = require('marked');
+const { Marked } = require('marked');
 const { markedHighlight } = require('marked-highlight');
 const hljs = require('highlight.js');
 const store = require('../utils/store');
@@ -20,7 +20,7 @@ const store = require('../utils/store');
 const POSTS_DIR = path.join(__dirname, '..', 'posts');
 
 // Markdown 渲染 + 代码语法高亮
-marked.use(markedHighlight({
+const marked = new Marked(markedHighlight({
   langPrefix: 'hljs language-',
   highlight(code, lang) {
     // mermaid 图表不交给 highlight.js 处理

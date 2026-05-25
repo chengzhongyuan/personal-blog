@@ -11,7 +11,7 @@
 */
 const fs = require('fs');
 const path = require('path');
-const { marked } = require('marked');
+const { Marked } = require('marked');
 const { markedHighlight } = require('marked-highlight');
 const hljs = require('highlight.js');
 
@@ -19,7 +19,7 @@ const SECRET_POSTS_DIR = path.join(__dirname, '..', 'secret-posts');
 const SECRET_PASSWORD = '050129';
 const ACCESS_COOKIE = 'secret_access';
 
-marked.use(markedHighlight({
+const marked = new Marked(markedHighlight({
   langPrefix: 'hljs language-',
   highlight(code, lang) {
     if (lang === 'mermaid') return code;
