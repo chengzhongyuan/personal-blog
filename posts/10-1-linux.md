@@ -15,7 +15,7 @@ category: linux系统编程
 - 文件访问者可以分为三类：文件拥有者、文件拥有者所属组、其他
   
 - 文件的访问类型和访问权限
-![unique_ptr](/images/linux系统编程/Linux权限以及进程控制概念/1.png)
+![unique_ptr](/images/linuxOS/OS1/1.png)
 ### 2.1 关于 inode 与文件删除的核心概念
 
 在 Linux 文件系统中，一个文件由两部分组成：
@@ -64,7 +64,7 @@ mask &~umask就是
 所以看成是去掉替他人的可写权限的一个过程
 ```
 利用图表的形式进行更明确清晰的解释
-![unique_ptr](../public/images/linux系统编程/Linux权限以及进程控制概念/2.png)
+![unique_ptr](/images/linuxOS/OS1/2.png)
 
 ### 2.4 文件夹的三个权限以及粘滞位
 - 可读权限：表明了你是否可以使用`ls`查看文件夹内部的文件
@@ -82,21 +82,21 @@ mask &~umask就是
 # 二、Linux进程控制
 ## 2.1 冯诺依曼体系结构
 我们常见的计算机，服务器大都遵循冯诺依曼体系
-![unique_ptr](../public/images/linux系统编程/Linux权限以及进程控制概念/3.png)
+![unique_ptr](/images/linuxOS/OS1/3.png)
 
 ## 2.2 操作系统的概念与定位
 我对于操作系统的理解就是担任系统资源的分配，与硬件交互，管理所有的软硬件资源
 操作系统包括内核和其他程序
-![unique_ptr](../public/images/linux系统编程/Linux权限以及进程控制概念/4.png)
+![unique_ptr](/images/linuxOS/OS1/4.png)
 
 ## 2.3 进程概念和PCB
 进程可以简单理解成一个正在执行的实例一个正在执行的程序，深入理解就是进程是一个分配系统资源（CPU时间和内存）的实体
 那么我们知道操作系统是一个管理者的角色对进程这个也同样是，遵循一个标准流程，先描述再组织
 这里的描述进程控制块(process control block)使用的是`task_struct`结构体，会被装载到RAM(内存)里并且包含着进程的信息。
-![unique_ptr](../public/images/linux系统编程/Linux权限以及进程控制概念/5.png)
+![unique_ptr](/images/linuxOS/OS1/5.png)
 
 我们可以使用指令来查看正在运行的所有进程,下方显示的蓝色的文字就是进程的PID
-![unique_ptr](../public/images/linux系统编程/Linux权限以及进程控制概念/6.png)
+![unique_ptr](/images/linuxOS/OS1/6.png)
 我们可以通过系统调用来获取进程标识符号
 ```c++
 #include <stdio.h>
@@ -150,7 +150,7 @@ I am child : 12935!, ret: 0
 ```
 ## 2.4 进程的多种状态
 ### 2.4.1 基本进程状态
-![unique_ptr](../public/images/linux系统编程/Linux权限以及进程控制概念/7.png)
+![unique_ptr](/images/linuxOS/OS1/7.png)
 
 ### 2.4.2 僵尸进程的产生
 僵尸进程（Zombie Process）：子进程完成任务已经中止之后返回任务码但是没有被父进程接收到。`task_struct`一直保留在这里需要操作系统进行维护，也无法用信号指令进行消除(因为`kill -9`的作用是终止一个正在运行的进程。而僵尸进程已经终止了，它只是在进程表里留了个"户口"，所以任何信号都无法影响它。)，一直占用系统资源也就是内存。
@@ -159,10 +159,10 @@ I am child : 12935!, ret: 0
 ## 2.5 进程调度优先级
 关于进程调度的优先级，优先权高的进程有优先执行权利。配置进程优先权对多任务环境的linux有用，可以改善系统性能。
 我们看向下面这张图片会看到两个值`PRI`、`NI`
-![unique_ptr](../public/images/linux系统编程/Linux权限以及进程控制概念/8.png)
+![unique_ptr](/images/linuxOS/OS1/8.png)
 - PRI：进程的优先级，决定CPU的先后执行顺序，数字越小优先级别也就越高
 - NI：我更愿意称之为优先级修正值，也就是说新的优先级是这样得到的`PRI(new)=PRI(old)+nice`,所以当NI值越小的时候这个程序的优先级就会越高，取值范围是-20-19.
 ## 2.6 进程地址空间
-![unique_ptr](../public/images/linux系统编程/Linux权限以及进程控制概念/9.png)
+![unique_ptr](/images/linuxOS/OS1/9.png)
 需要补充的是地址空间描述的基本空间大小是字节32位下最多形成2^32次方个地址一个对应一个字节所以是4GB每一个字节都有唯一的地址（唯一性这也是地址最大的意义）。
 虚拟进程地址空间是通过页表分配到为例内存之上。
