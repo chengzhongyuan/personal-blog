@@ -15,7 +15,7 @@ category: linux系统编程
 - 文件访问者可以分为三类：文件拥有者、文件拥有者所属组、其他
   
 - 文件的访问类型和访问权限
-![unique_ptr](../public/images/linux系统编程/Linux权限以及进程控制概念/1.png)
+![unique_ptr](/images/linux系统编程/Linux权限以及进程控制概念/1.png)
 ### 2.1 关于 inode 与文件删除的核心概念
 
 在 Linux 文件系统中，一个文件由两部分组成：
