@@ -60,7 +60,8 @@ function loadSecretPosts() {
         summary: content.trim().split('\n')[0].replace(/^#+\s*/, '').slice(0, 120),
       };
     })
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .reverse();
 }
 
 function hasAccess(req) {

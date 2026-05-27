@@ -171,8 +171,7 @@ exports.getHome = (req, res) => {
 
   for (const cat of categoryOrder) {
     const items = list.filter(p => p.category === cat);
-    // 面试经典150题按编号正序（1→2→3），其他分类保持日期倒序
-    if (cat === '面试经典150题') items.reverse();
+    items.reverse();
     if (items.length > 0) {
       groups.push({ name: cat, posts: items });
       seenCategories.add(cat);
